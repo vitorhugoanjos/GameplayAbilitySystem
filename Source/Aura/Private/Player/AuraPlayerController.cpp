@@ -1,6 +1,3 @@
-
-
-
 #include "Player/AuraPlayerController.h"
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInputComponent.h"
@@ -33,12 +30,14 @@ void AAuraPlayerController::CursorTrace()
 		{
 			ThisActor->HighlightActor();
 		}
-	} else
+	}
+	else
 	{
 		if (ThisActor == nullptr)
 		{
 			LastActor->UnHighlightActor();
-		} else
+		}
+		else
 		{
 			if (LastActor != ThisActor)
 			{
@@ -57,8 +56,10 @@ void AAuraPlayerController::BeginPlay()
 
 	UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(
 		GetLocalPlayer());
-	check(Subsystem);
-	Subsystem->AddMappingContext(AuraContext, 0);
+	if (Subsystem)
+	{
+		Subsystem->AddMappingContext(AuraContext, 0);
+	}
 
 	bShowMouseCursor = true;
 	DefaultMouseCursor = EMouseCursor::Default;
@@ -75,7 +76,6 @@ void AAuraPlayerController::SetupInputComponent()
 
 	UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(InputComponent);
 	EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AAuraPlayerController::Move);
-	
 }
 
 void AAuraPlayerController::Move(const FInputActionValue& InputActionValue)
@@ -91,7 +91,5 @@ void AAuraPlayerController::Move(const FInputActionValue& InputActionValue)
 	{
 		ControlledPawn->AddMovementInput(ForwardDirection, InputAxisVector.Y);
 		ControlledPawn->AddMovementInput(RightDirection, InputAxisVector.X);
-
 	}
-
 }
